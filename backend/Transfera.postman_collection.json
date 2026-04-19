@@ -1,0 +1,287 @@
+{
+  "info": {
+    "name": "TRANSFERA API",
+    "_postman_id": "2cf1f470-ef34-4ebf-9f54-67f791c29f42",
+    "description": "Transfera backend API test collection.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000"
+    },
+    {
+      "key": "token",
+      "value": ""
+    },
+    {
+      "key": "userId",
+      "value": ""
+    },
+    {
+      "key": "playerId",
+      "value": "6983809"
+    },
+    {
+      "key": "teamId",
+      "value": "78"
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Mehmet\",\n  \"surname\": \"Orhan\",\n  \"email\": \"mehmet@example.com\",\n  \"password\": \"12345678\"\n}"
+            },
+            "url": "{{baseUrl}}/users/register"
+          }
+        }, 
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const data = pm.response.json();",
+                  "if (data.token) pm.collectionVariables.set('token', data.token);",
+                  "if (data.user && data.user.id) pm.collectionVariables.set('userId', data.user.id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"mehmet@example.com\",\n  \"password\": \"12345678\"\n}"
+            },
+            "url": "{{baseUrl}}/users/login"
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{baseUrl}}/users/logout"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Get Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{baseUrl}}/users/{{userId}}"
+          }
+        },
+        {
+          "name": "Add Favorite Player",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"playerId\": {{playerId}}\n}"
+            },
+            "url": "{{baseUrl}}/users/{{userId}}/favorites/players"
+          }
+        },
+        {
+          "name": "Add Favorite Team",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teamId\": {{teamId}}\n}"
+            },
+            "url": "{{baseUrl}}/users/{{userId}}/favorites/teams"
+          }
+        },
+        {
+          "name": "Update Notifications",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"transferUpdates\": true,\n  \"matchAlerts\": false,\n  \"newsletter\": true\n}"
+            },
+            "url": "{{baseUrl}}/users/{{userId}}/notifications"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Football Data",
+      "item": [
+        {
+          "name": "List Teams",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/teams?limit=5&league=Premier%20League"
+          }
+        },
+        {
+          "name": "List Players",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/players?limit=5"
+          }
+        },
+        {
+          "name": "Player Detail",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/players/{{playerId}}"
+          }
+        },
+        {
+          "name": "Player Market Value",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/players/{{playerId}}/market-value"
+          }
+        },
+        {
+          "name": "List Transfers",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/transfers?limit=5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Comments",
+      "item": [
+        {
+          "name": "Add Comment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"text\": \"Cok iyi bir orta saha oyuncusu.\",\n  \"rating\": 5\n}"
+            },
+            "url": "{{baseUrl}}/api/players/{{playerId}}/comments"
+          }
+        },
+        {
+          "name": "List Comments",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/players/{{playerId}}/comments"
+          }
+        }
+      ]
+    },
+    {
+      "name": "AI",
+      "item": [
+        {
+          "name": "Transfer Predictions",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"playerId\": {{playerId}}\n}"
+            },
+            "url": "{{baseUrl}}/ai/transfer-predictions"
+          }
+        },
+        {
+          "name": "Player Value Prediction",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/ai/player-value/{{playerId}}"
+          }
+        },
+        {
+          "name": "Transfer Trends",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/ai/transfer-trends"
+          }
+        }
+      ]
+    }
+  ]
+}

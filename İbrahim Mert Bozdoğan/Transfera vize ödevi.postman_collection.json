@@ -1,0 +1,250 @@
+{
+  "info": {
+    "_postman_id": "01e0a585-9851-4eb2-8901-2eba91a9de0f",
+    "name": "Transfera vize ödevi",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "51016559",
+    "_collection_link": "https://go.postman.co/collection/51016559-01e0a585-9851-4eb2-8901-2eba91a9de0f?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Kullanıcı Kaydi",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"name\": \"Ibrahim\",\r\n  \"surname\": \"Deneme\",\r\n  \"email\": \"ideneme@test.com\",\r\n  \"password\": \"123456\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://transfera-backend.vercel.app/users/register",
+          "protocol": "https",
+          "host": [
+            "transfera-backend",
+            "vercel",
+            "app"
+          ],
+          "path": [
+            "users",
+            "register"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Kullanıcı Girişi",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ZDFjMGE2MWYwNThiNjI1OGRhODA3MCIsInJvbGUiOiJ1c2VyIiwiZW1haWwiOiJpYm96ZG9nYW5AZ21haWwuY29tIiwiaWF0IjoxNzc1MzU2OTMwLCJleHAiOjE3NzU0NDMzMzB9.4TbmUnO9r8oz7Sqke9xvufvUfMaSMPbtNAtmPm863pw",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"email\": \"ibozdogan@gmail.com\",\r\n  \"password\": \"123456\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://transfera-backend.vercel.app/users/login",
+          "protocol": "https",
+          "host": [
+            "transfera-backend",
+            "vercel",
+            "app"
+          ],
+          "path": [
+            "users",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Profil Görüntüleme",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "Oyuncuları Listeleme",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "Oyuncu Detayı",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "Transferleri Listeleme",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "Favori Takım Silme",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ZDE5MGFkMDE1ZTAxZjk4Y2Y2ODM0NyIsInJvbGUiOiJ1c2VyIiwiZW1haWwiOiJpYm96ZG9nYW5AdGVzdC5jb20iLCJpYXQiOjE3NzUzNDE3NDIsImV4cCI6MTc3NTQyODE0Mn0.mm2QrtQMWvYKJYk-kO2GgOLAqUJrgDnahbW8W5zjO2E",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "https://transfera-backend.vercel.app/users/69d190ad015e01f98cf68347/favorites/teams/78",
+          "protocol": "https",
+          "host": [
+            "transfera-backend",
+            "vercel",
+            "app"
+          ],
+          "path": [
+            "users",
+            "69d190ad015e01f98cf68347",
+            "favorites",
+            "teams",
+            "78"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "AI Transfer Uyum Tahmini",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"playerId\": 6983809,\r\n  \"preferredLeague\": \"Premier League\",\r\n  \"targetTeamId\": 78\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://transfera-backend.vercel.app/ai/transfer-predictions",
+          "protocol": "https",
+          "host": [
+            "transfera-backend",
+            "vercel",
+            "app"
+          ],
+          "path": [
+            "ai",
+            "transfer-predictions"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Yorum Ekleme",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ZDE5MGFkMDE1ZTAxZjk4Y2Y2ODM0NyIsInJvbGUiOiJ1c2VyIiwiZW1haWwiOiJpYm96ZG9nYW5AdGVzdC5jb20iLCJpYXQiOjE3NzUzNDE3NDIsImV4cCI6MTc3NTQyODE0Mn0.mm2QrtQMWvYKJYk-kO2GgOLAqUJrgDnahbW8W5zjO2E",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"text\": \"Ibrahim test yorumu\",\r\n  \"rating\": 5\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://transfera-backend.vercel.app/api/players/6983809/comments",
+          "protocol": "https",
+          "host": [
+            "transfera-backend",
+            "vercel",
+            "app"
+          ],
+          "path": [
+            "api",
+            "players",
+            "6983809",
+            "comments"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Yorum Güncelleme",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"text\": \"Guncellenmis yorum\",\r\n  \"rating\": 4\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://transfera-backend.vercel.app/api/comments/69d1a1b576508b5e38a1b7d4",
+          "protocol": "https",
+          "host": [
+            "transfera-backend",
+            "vercel",
+            "app"
+          ],
+          "path": [
+            "api",
+            "comments",
+            "69d1a1b576508b5e38a1b7d4"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

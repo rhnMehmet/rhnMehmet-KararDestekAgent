@@ -1,0 +1,1675 @@
+openapi: 3.0.3
+info:
+  title: Transfera API
+  version: 1.0.0
+  description: >
+    TRANSFERA – futbol oyuncularının transfer geçmişi, piyasa değeri, takım bilgileri ve
+    kullanıcı favorileri yönetimini sağlayan RESTful API. Yapay zekâ (AI) destekli transfer
+    tahmini, oyuncu değer tahmini ve transfer trend analizi uçları içerir.
+    API JWT tabanlı kimlik doğrulama ile korunmaktadır.
+  contact:
+    name: Transfera Team
+    email: example@transfera.app
+
+servers:
+  - url: https://api.transfera.app
+    description: Üretim sunucusu (Production)
+  - url: https://staging-api.transfera.app
+    description: Test sunucusu (Staging)
+  - url: https://localhost:3000
+    description: Yerel geliştirme sunucusu (Development)
+
+tags:
+  - name: Kullanıcılar
+    description: Kullanıcı kaydı, giriş, profil ve hesap işlemleri
+  - name: Oyuncular
+    description: Oyuncu listeleme, detay, transfer geçmişi ve piyasa değeri
+  - name: Takımlar
+    description: Takım listeleme, detay ve kadro işlemleri
+  - name: Transferler
+    description: Transfer listeleme ve yetkili güncelleme işlemleri
+  - name: Favoriler
+    description: Kullanıcı favori takım/oyuncu ekleme ve silme işlemleri
+  - name: Bildirimler
+    description: Kullanıcı bildirim tercihlerini güncelleme
+  - name: Yapay Zekâ
+    description: AI tabanlı transfer tahmini, değer tahmini ve trend analizi
+
+security:
+  - BearerAuth: []
+
+paths:
+  /users/register:
+    post:
+      tags:
+        - Kullanıcılar
+      summary: Kullanıcı Kaydı
+      operationId: registerUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserRegisterInput"
+      responses:
+        "201":
+          description: Kullanıcı başarıyla oluşturuldu
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          description: Geçersiz istek verisi
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "409":
+          description: E-posta zaten kayıtlı
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /users/login:
+    post:
+      tags:
+        - Kullanıcılar
+      summary: Kullanıcı Girişi
+      operationId: loginUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserLoginInput"
+      responses:
+        "200":
+          description: Giriş başarılı, token üretildi
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        "400":
+          description: Geçersiz istek verisi
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: E-posta veya şifre hatalı
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /users/logout:
+    post:
+      tags:
+        - Kullanıcılar
+      summary: Kullanıcı Çıkışı
+      operationId: logoutUser
+      responses:
+        "204":
+          description: Oturum sonlandırıldı (token geçersiz hale getirildi)
+        "401":
+          description: Kimlik doğrulama başarısız (token eksik veya geçersiz)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /users/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: Kullanıcının benzersiz kimlik numarası
+        schema:
+          type: string
+        example: "usr123"
+
+    get:
+      tags:
+        - Kullanıcılar
+      summary: Profil Görüntüleme
+      operationId: getUserProfile
+      responses:
+        "200":
+          description: Profil başarıyla getirildi
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserProfile"
+        "401":
+          description: Kimlik doğrulama başarısız (token eksik veya geçersiz)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "403":
+          description: Yetkisiz erişim (başkasının profili)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Kullanıcı bulunamadı
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+    put:
+      tags:
+        - Kullanıcılar
+      summary: Profil Güncelleme
+      operationId: updateUserProfile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserUpdateInput"
+      responses:
+        "200":
+          description: Profil başarıyla güncellendi
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserProfile"
+        "400":
+          description: Geçersiz istek verisi
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Kimlik doğrulama başarısız (token eksik veya geçersiz)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "403":
+          description: Yetkisiz işlem
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Kullanıcı bulunamadı
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+    delete:
+      tags:
+        - Kullanıcılar
+      summary: Hesap Silme
+      operationId: deleteUser
+      responses:
+        "204":
+          description: Hesap kalıcı olarak silindi
+        "401":
+          description: Kimlik doğrulama başarısız (token eksik veya geçersiz)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "403":
+          description: Yetkisiz işlem
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Kullanıcı bulunamadı
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /users/{id}/password:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: Kullanıcının benzersiz kimlik numarası
+        schema:
+          type: string
+        example: "usr123"
+
+    put:
+      tags:
+        - Kullanıcılar
+      summary: Şifre Değiştirme
+      operationId: changePassword
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PasswordChangeInput"
+      responses:
+        "204":
+          description: Şifre başarıyla değiştirildi
+        "400":
+          description: Geçersiz istek verisi
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Kimlik doğrulama başarısız (token eksik veya geçersiz)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "403":
+          description: Yetkisiz işlem (başkasının şifresi)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /users/{id}/favorites/players:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: Kullanıcının benzersiz kimlik numarası
+        schema:
+          type: string
+        example: "usr123"
+
+    post:
+      tags:
+        - Favoriler
+      summary: Favori Oyuncu Ekleme
+      operationId: addFavoritePlayer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FavoritePlayerAddInput"
+      responses:
+        "201":
+          description: Oyuncu favorilere eklendi
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Favorites"
+        "400":
+          description: Geçersiz istek verisi
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Kimlik doğrulama başarısız (token eksik veya geçersiz)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Oyuncu veya kullanıcı bulunamadı
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "409":
+          description: Oyuncu zaten favorilerde
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /users/{id}/favorites/players/{playerId}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: Kullanıcının benzersiz kimlik numarası
+        schema:
+          type: string
+        example: "usr123"
+      - name: playerId
+        in: path
+        required: true
+        description: Oyuncunun benzersiz kimlik numarası
+        schema:
+          type: string
+        example: "ply789"
+
+    delete:
+      tags:
+        - Favoriler
+      summary: Favori Oyuncu Silme
+      operationId: deleteFavoritePlayer
+      responses:
+        "204":
+          description: Favori oyuncu silindi
+        "401":
+          description: Kimlik doğrulama başarısız (token eksik veya geçersiz)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "403":
+          description: Yetkisiz işlem
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Kullanıcı veya oyuncu bulunamadı / favorilerde değil
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /users/{id}/favorites/teams:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: Kullanıcının benzersiz kimlik numarası
+        schema:
+          type: string
+        example: "usr123"
+
+    post:
+      tags:
+        - Favoriler
+      summary: Favori Takım Ekleme
+      operationId: addFavoriteTeam
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FavoriteTeamAddInput"
+      responses:
+        "201":
+          description: Takım favorilere eklendi
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Favorites"
+        "400":
+          description: Geçersiz istek verisi
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Kimlik doğrulama başarısız (token eksik veya geçersiz)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Takım veya kullanıcı bulunamadı
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "409":
+          description: Takım zaten favorilerde
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /users/{id}/favorites/teams/{teamId}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: Kullanıcının benzersiz kimlik numarası
+        schema:
+          type: string
+        example: "usr123"
+      - name: teamId
+        in: path
+        required: true
+        description: Takımın benzersiz kimlik numarası
+        schema:
+          type: string
+        example: "tm456"
+
+    delete:
+      tags:
+        - Favoriler
+      summary: Favori Takım Silme
+      operationId: deleteFavoriteTeam
+      responses:
+        "204":
+          description: Favori takım silindi
+        "401":
+          description: Kimlik doğrulama başarısız (token eksik veya geçersiz)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "403":
+          description: Yetkisiz işlem
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Kullanıcı veya takım bulunamadı / favorilerde değil
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /users/{id}/notifications:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: Kullanıcının benzersiz kimlik numarası
+        schema:
+          type: string
+        example: "usr123"
+
+    put:
+      tags:
+        - Bildirimler
+      summary: Bildirim Tercihlerini Güncelleme
+      operationId: updateNotificationPreferences
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NotificationPreferencesInput"
+      responses:
+        "200":
+          description: Bildirim tercihleri güncellendi
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotificationPreferences"
+        "400":
+          description: Geçersiz istek verisi
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Kimlik doğrulama başarısız (token eksik veya geçersiz)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "403":
+          description: Yetkisiz işlem
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Kullanıcı bulunamadı
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /players:
+    get:
+      tags:
+        - Oyuncular
+      summary: Oyuncuları Listeleme
+      operationId: listPlayers
+      parameters:
+        - name: q
+          in: query
+          required: false
+          description: Arama sorgusu (isim/ülke/pozisyon vb.)
+          schema:
+            type: string
+          example: "messi"
+        - name: teamId
+          in: query
+          required: false
+          description: Takıma göre filtreleme
+          schema:
+            type: string
+          example: "tm456"
+        - name: position
+          in: query
+          required: false
+          description: Pozisyona göre filtreleme
+          schema:
+            type: string
+          example: "FW"
+        - name: page
+          in: query
+          required: false
+          description: Sayfa numarası (varsayılan 1)
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+          example: 1
+        - name: limit
+          in: query
+          required: false
+          description: Sayfa başına sonuç sayısı (varsayılan 10, maksimum 50)
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+            default: 10
+          example: 10
+      responses:
+        "200":
+          description: Oyuncular başarıyla listelendi
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaginatedPlayers"
+        "400":
+          description: Geçersiz filtre/pagination parametreleri
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /players/{playerId}:
+    parameters:
+      - name: playerId
+        in: path
+        required: true
+        description: Oyuncunun benzersiz kimlik numarası
+        schema:
+          type: string
+        example: "ply789"
+
+    get:
+      tags:
+        - Oyuncular
+      summary: Oyuncu Detayı Görüntüleme
+      operationId: getPlayer
+      responses:
+        "200":
+          description: Oyuncu detayı başarıyla getirildi
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Player"
+        "404":
+          description: Oyuncu bulunamadı
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /players/{playerId}/transfers:
+    parameters:
+      - name: playerId
+        in: path
+        required: true
+        description: Oyuncunun benzersiz kimlik numarası
+        schema:
+          type: string
+        example: "ply789"
+
+    get:
+      tags:
+        - Oyuncular
+      summary: Oyuncu Transfer Geçmişi
+      operationId: listPlayerTransfers
+      parameters:
+        - name: page
+          in: query
+          required: false
+          description: Sayfa numarası (varsayılan 1)
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+          example: 1
+        - name: limit
+          in: query
+          required: false
+          description: Sayfa başına sonuç sayısı (varsayılan 10, maksimum 50)
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+            default: 10
+          example: 10
+        - name: order
+          in: query
+          required: false
+          description: Sıralama (asc/desc) - kronolojik
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: desc
+          example: desc
+      responses:
+        "200":
+          description: Oyuncu transfer geçmişi başarıyla listelendi
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaginatedTransfers"
+        "404":
+          description: Oyuncu bulunamadı
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /players/{playerId}/market-value:
+    parameters:
+      - name: playerId
+        in: path
+        required: true
+        description: Oyuncunun benzersiz kimlik numarası
+        schema:
+          type: string
+        example: "ply789"
+
+    get:
+      tags:
+        - Oyuncular
+      summary: Piyasa Değeri Görüntüleme
+      operationId: getPlayerMarketValue
+      responses:
+        "200":
+          description: Oyuncunun piyasa değeri ve geçmiş değişimleri getirildi
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MarketValueResponse"
+        "404":
+          description: Oyuncu bulunamadı
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /teams:
+    get:
+      tags:
+        - Takımlar
+      summary: Takımları Listeleme
+      operationId: listTeams
+      parameters:
+        - name: league
+          in: query
+          required: false
+          description: Lig bazlı filtreleme
+          schema:
+            type: string
+          example: "Süper Lig"
+        - name: country
+          in: query
+          required: false
+          description: Ülke bazlı filtreleme
+          schema:
+            type: string
+          example: "Türkiye"
+        - name: page
+          in: query
+          required: false
+          description: Sayfa numarası (varsayılan 1)
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+          example: 1
+        - name: limit
+          in: query
+          required: false
+          description: Sayfa başına sonuç sayısı (varsayılan 10, maksimum 50)
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+            default: 10
+          example: 10
+      responses:
+        "200":
+          description: Takımlar başarıyla listelendi
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaginatedTeams"
+        "400":
+          description: Geçersiz filtre/pagination parametreleri
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /teams/{teamId}:
+    parameters:
+      - name: teamId
+        in: path
+        required: true
+        description: Takımın benzersiz kimlik numarası
+        schema:
+          type: string
+        example: "tm456"
+
+    get:
+      tags:
+        - Takımlar
+      summary: Takım Detayı Görüntüleme
+      operationId: getTeam
+      responses:
+        "200":
+          description: Takım detayı getirildi
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Team"
+        "404":
+          description: Takım bulunamadı
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /teams/{teamId}/squad:
+    parameters:
+      - name: teamId
+        in: path
+        required: true
+        description: Takımın benzersiz kimlik numarası
+        schema:
+          type: string
+        example: "tm456"
+
+    get:
+      tags:
+        - Takımlar
+      summary: Takım Kadrosu Görüntüleme
+      operationId: getTeamSquad
+      responses:
+        "200":
+          description: Takımın güncel kadrosu listelendi
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TeamSquad"
+        "404":
+          description: Takım bulunamadı
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /transfers:
+    get:
+      tags:
+        - Transferler
+      summary: Transferleri Listeleme
+      operationId: listTransfers
+      parameters:
+        - name: fromClubId
+          in: query
+          required: false
+          description: Çıkış kulübüne göre filtreleme
+          schema:
+            type: string
+          example: "tm001"
+        - name: toClubId
+          in: query
+          required: false
+          description: Varış kulübüne göre filtreleme
+          schema:
+            type: string
+          example: "tm456"
+        - name: startDate
+          in: query
+          required: false
+          description: Başlangıç tarihi (YYYY-MM-DD)
+          schema:
+            type: string
+            format: date
+          example: "2025-01-01"
+        - name: endDate
+          in: query
+          required: false
+          description: Bitiş tarihi (YYYY-MM-DD)
+          schema:
+            type: string
+            format: date
+          example: "2026-12-31"
+        - name: page
+          in: query
+          required: false
+          description: Sayfa numarası (varsayılan 1)
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+          example: 1
+        - name: limit
+          in: query
+          required: false
+          description: Sayfa başına sonuç sayısı (varsayılan 10, maksimum 50)
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+            default: 10
+          example: 10
+      responses:
+        "200":
+          description: Transferler başarıyla listelendi
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaginatedTransfers"
+        "400":
+          description: Geçersiz filtre/pagination parametreleri
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /transfers/{transferId}:
+    parameters:
+      - name: transferId
+        in: path
+        required: true
+        description: Transferin benzersiz kimlik numarası
+        schema:
+          type: string
+        example: "trf999"
+
+    put:
+      tags:
+        - Transferler
+      summary: Yetkili Transfer Güncelleme
+      operationId: updateTransfer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TransferUpdateInput"
+      responses:
+        "200":
+          description: Transfer başarıyla güncellendi
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Transfer"
+        "400":
+          description: Geçersiz istek verisi
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Kimlik doğrulama başarısız (token eksik veya geçersiz)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "403":
+          description: Sadece yetkili kullanıcılar güncelleyebilir (rol bazlı kontrol)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Transfer bulunamadı
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /ai/transfer-predictions:
+    post:
+      tags:
+        - Yapay Zekâ
+      summary: Transfer Tahmini Oluşturma (AI)
+      operationId: createTransferPrediction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TransferPredictionInput"
+      responses:
+        "201":
+          description: Transfer tahmini üretildi
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TransferPrediction"
+        "400":
+          description: Geçersiz istek verisi
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Kimlik doğrulama başarısız (token eksik veya geçersiz)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Oyuncu veya takım bulunamadı
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /ai/player-value/{playerId}:
+    parameters:
+      - name: playerId
+        in: path
+        required: true
+        description: Oyuncunun benzersiz kimlik numarası
+        schema:
+          type: string
+        example: "ply789"
+
+    get:
+      tags:
+        - Yapay Zekâ
+      summary: Oyuncu Değer Tahmini (AI)
+      operationId: predictPlayerValue
+      responses:
+        "200":
+          description: AI tahmini piyasa değeri hesaplandı
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PlayerValuePrediction"
+        "404":
+          description: Oyuncu bulunamadı
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /ai/transfer-trends:
+    get:
+      tags:
+        - Yapay Zekâ
+      summary: Transfer Trend Analizi (AI)
+      operationId: getTransferTrends
+      parameters:
+        - name: season
+          in: query
+          required: false
+          description: Sezon (örn: 2025-2026)
+          schema:
+            type: string
+          example: "2025-2026"
+        - name: league
+          in: query
+          required: false
+          description: Lig bazlı analiz
+          schema:
+            type: string
+          example: "Süper Lig"
+      responses:
+        "200":
+          description: Trend analizi raporu üretildi
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TransferTrendsReport"
+        "400":
+          description: Geçersiz parametreler
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'JWT tabanlı kimlik doğrulama. İstek başlığına "Authorization: Bearer <token>" eklenmeli.'
+
+  schemas:
+    Error:
+      type: object
+      description: Hata durumlarında döndürülen standart hata yanıtı
+      properties:
+        message:
+          type: string
+          description: Hatayı açıklayan mesaj
+          example: "Geçersiz istek"
+      required:
+        - message
+
+    User:
+      type: object
+      description: Kullanıcı modelini temsil eder
+      properties:
+        _id:
+          type: string
+          description: Kullanıcının benzersiz kimlik numarası
+          example: "usr123"
+        firstName:
+          type: string
+          description: Ad
+          example: "Mehmet"
+        lastName:
+          type: string
+          description: Soyad
+          example: "Orhan"
+        email:
+          type: string
+          format: email
+          description: E-posta
+          example: "mehmet@example.com"
+        createdOn:
+          type: string
+          format: date-time
+          description: Oluşturulma tarihi
+          example: "2026-03-04T10:00:00Z"
+      required:
+        - _id
+        - firstName
+        - lastName
+        - email
+
+    UserProfile:
+      type: object
+      description: Profil görüntüleme/güncelleme için döndürülen kullanıcı profili
+      properties:
+        _id:
+          type: string
+          example: "usr123"
+        firstName:
+          type: string
+          example: "Mehmet"
+        lastName:
+          type: string
+          example: "Orhan"
+        email:
+          type: string
+          format: email
+          example: "mehmet@example.com"
+        favoriteTeams:
+          type: array
+          items:
+            type: string
+          example: ["tm456", "tm001"]
+        favoritePlayers:
+          type: array
+          items:
+            type: string
+          example: ["ply789", "ply111"]
+        notifications:
+          $ref: "#/components/schemas/NotificationPreferences"
+      required:
+        - _id
+        - firstName
+        - lastName
+        - email
+
+    UserRegisterInput:
+      type: object
+      description: Kullanıcı kaydı için istek gövdesi
+      properties:
+        firstName:
+          type: string
+          minLength: 2
+          maxLength: 50
+          example: "Mehmet"
+        lastName:
+          type: string
+          minLength: 2
+          maxLength: 50
+          example: "Orhan"
+        email:
+          type: string
+          format: email
+          example: "mehmet@example.com"
+        password:
+          type: string
+          format: password
+          minLength: 6
+          example: "StrongPass123!"
+      required:
+        - firstName
+        - lastName
+        - email
+        - password
+
+    UserLoginInput:
+      type: object
+      description: Kullanıcı girişi için istek gövdesi
+      properties:
+        email:
+          type: string
+          format: email
+          example: "mehmet@example.com"
+        password:
+          type: string
+          format: password
+          example: "StrongPass123!"
+      required:
+        - email
+        - password
+
+    AuthResponse:
+      type: object
+      description: Başarılı giriş yanıtı (JWT)
+      properties:
+        token:
+          type: string
+          description: JWT erişim tokenı
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        user:
+          $ref: "#/components/schemas/User"
+      required:
+        - token
+        - user
+
+    UserUpdateInput:
+      type: object
+      description: Profil güncelleme için istek gövdesi
+      properties:
+        firstName:
+          type: string
+          minLength: 2
+          maxLength: 50
+          example: "Mehmet"
+        lastName:
+          type: string
+          minLength: 2
+          maxLength: 50
+          example: "Orhan"
+        email:
+          type: string
+          format: email
+          example: "mehmet@example.com"
+
+    PasswordChangeInput:
+      type: object
+      description: Şifre değiştirme isteği
+      properties:
+        currentPassword:
+          type: string
+          format: password
+          example: "OldPass123!"
+        newPassword:
+          type: string
+          format: password
+          minLength: 6
+          example: "NewPass456!"
+      required:
+        - currentPassword
+        - newPassword
+
+    FavoritePlayerAddInput:
+      type: object
+      description: Favori oyuncu ekleme isteği
+      properties:
+        playerId:
+          type: string
+          example: "ply789"
+      required:
+        - playerId
+
+    FavoriteTeamAddInput:
+      type: object
+      description: Favori takım ekleme isteği
+      properties:
+        teamId:
+          type: string
+          example: "tm456"
+      required:
+        - teamId
+
+    Favorites:
+      type: object
+      description: Kullanıcının favori listeleri
+      properties:
+        userId:
+          type: string
+          example: "usr123"
+        teams:
+          type: array
+          items:
+            type: string
+          example: ["tm456", "tm001"]
+        players:
+          type: array
+          items:
+            type: string
+          example: ["ply789"]
+      required:
+        - userId
+        - teams
+        - players
+
+    NotificationPreferences:
+      type: object
+      description: Bildirim tercihleri
+      properties:
+        transferNotifications:
+          type: boolean
+          description: Transfer bildirimleri açık/kapalı
+          example: true
+        matchNotifications:
+          type: boolean
+          description: Maç bildirimleri açık/kapalı
+          example: false
+        emailNotifications:
+          type: boolean
+          description: E-posta bildirimleri
+          example: true
+      required:
+        - transferNotifications
+        - matchNotifications
+        - emailNotifications
+
+    NotificationPreferencesInput:
+      type: object
+      description: Bildirim tercihleri güncelleme isteği
+      properties:
+        transferNotifications:
+          type: boolean
+          example: true
+        matchNotifications:
+          type: boolean
+          example: false
+        emailNotifications:
+          type: boolean
+          example: true
+
+    Player:
+      type: object
+      description: Oyuncu modelini temsil eder
+      properties:
+        _id:
+          type: string
+          example: "ply789"
+        name:
+          type: string
+          example: "Ahmet Yılmaz"
+        age:
+          type: integer
+          minimum: 15
+          example: 24
+        position:
+          type: string
+          description: Pozisyon kısaltması (GK/DF/MF/FW vb.)
+          example: "FW"
+        teamId:
+          type: string
+          example: "tm456"
+        stats:
+          $ref: "#/components/schemas/PlayerStats"
+        marketValue:
+          $ref: "#/components/schemas/Money"
+      required:
+        - _id
+        - name
+        - age
+        - position
+
+    PlayerStats:
+      type: object
+      description: Oyuncu istatistikleri
+      properties:
+        appearances:
+          type: integer
+          example: 28
+        goals:
+          type: integer
+          example: 12
+        assists:
+          type: integer
+          example: 7
+        minutes:
+          type: integer
+          example: 2100
+
+    Team:
+      type: object
+      description: Takım modelini temsil eder
+      properties:
+        _id:
+          type: string
+          example: "tm456"
+        name:
+          type: string
+          example: "Konyaspor"
+        country:
+          type: string
+          example: "Türkiye"
+        league:
+          type: string
+          example: "Süper Lig"
+        standing:
+          type: integer
+          description: Lig sıralaması
+          example: 6
+        recentTransfers:
+          type: array
+          items:
+            $ref: "#/components/schemas/Transfer"
+      required:
+        - _id
+        - name
+
+    TeamSquad:
+      type: object
+      description: Takım kadrosu
+      properties:
+        teamId:
+          type: string
+          example: "tm456"
+        players:
+          type: array
+          items:
+            $ref: "#/components/schemas/Player"
+      required:
+        - teamId
+        - players
+
+    Transfer:
+      type: object
+      description: Transfer modelini temsil eder
+      properties:
+        _id:
+          type: string
+          example: "trf999"
+        playerId:
+          type: string
+          example: "ply789"
+        fromClubId:
+          type: string
+          example: "tm001"
+        toClubId:
+          type: string
+          example: "tm456"
+        fee:
+          $ref: "#/components/schemas/Money"
+        date:
+          type: string
+          format: date
+          example: "2026-01-15"
+      required:
+        - _id
+        - playerId
+        - fromClubId
+        - toClubId
+        - date
+
+    TransferUpdateInput:
+      type: object
+      description: Yetkili transfer güncelleme isteği
+      properties:
+        fromClubId:
+          type: string
+          example: "tm001"
+        toClubId:
+          type: string
+          example: "tm456"
+        fee:
+          $ref: "#/components/schemas/Money"
+        date:
+          type: string
+          format: date
+          example: "2026-01-15"
+
+    Money:
+      type: object
+      description: Para formatı
+      properties:
+        amount:
+          type: number
+          format: float
+          example: 12.5
+        currency:
+          type: string
+          example: "EUR"
+      required:
+        - amount
+        - currency
+
+    PaginatedPlayers:
+      type: object
+      description: Sayfalı oyuncu liste yanıtı
+      properties:
+        page:
+          type: integer
+          example: 1
+        limit:
+          type: integer
+          example: 10
+        total:
+          type: integer
+          example: 1240
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/Player"
+      required:
+        - page
+        - limit
+        - total
+        - items
+
+    PaginatedTeams:
+      type: object
+      description: Sayfalı takım liste yanıtı
+      properties:
+        page:
+          type: integer
+          example: 1
+        limit:
+          type: integer
+          example: 10
+        total:
+          type: integer
+          example: 120
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/Team"
+      required:
+        - page
+        - limit
+        - total
+        - items
+
+    PaginatedTransfers:
+      type: object
+      description: Sayfalı transfer liste yanıtı
+      properties:
+        page:
+          type: integer
+          example: 1
+        limit:
+          type: integer
+          example: 10
+        total:
+          type: integer
+          example: 9800
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/Transfer"
+      required:
+        - page
+        - limit
+        - total
+        - items
+
+    MarketValueResponse:
+      type: object
+      description: Oyuncu piyasa değeri ve geçmişi
+      properties:
+        playerId:
+          type: string
+          example: "ply789"
+        current:
+          $ref: "#/components/schemas/Money"
+        history:
+          type: array
+          description: Tarihsel piyasa değeri değişimleri
+          items:
+            $ref: "#/components/schemas/MarketValuePoint"
+      required:
+        - playerId
+        - current
+        - history
+
+    MarketValuePoint:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date
+          example: "2025-08-01"
+        value:
+          $ref: "#/components/schemas/Money"
+      required:
+        - date
+        - value
+
+    TransferPredictionInput:
+      type: object
+      description: AI transfer tahmini için istek gövdesi
+      properties:
+        playerId:
+          type: string
+          example: "ply789"
+        context:
+          type: object
+          description: Modelin kullanacağı ek bağlam (performans, sözleşme, trend vb.)
+          properties:
+            contractMonthsLeft:
+              type: integer
+              example: 10
+            recentFormScore:
+              type: number
+              format: float
+              example: 7.8
+            preferredLeagues:
+              type: array
+              items:
+                type: string
+              example: ["Premier League", "La Liga"]
+      required:
+        - playerId
+
+    TransferPrediction:
+      type: object
+      description: AI transfer tahmini sonucu
+      properties:
+        predictionId:
+          type: string
+          example: "pred001"
+        playerId:
+          type: string
+          example: "ply789"
+        likelyDestinations:
+          type: array
+          description: Olası hedef kulüpler (olasılıklarla)
+          items:
+            $ref: "#/components/schemas/LikelyDestination"
+        generatedOn:
+          type: string
+          format: date-time
+          example: "2026-03-04T12:00:00Z"
+      required:
+        - predictionId
+        - playerId
+        - likelyDestinations
+        - generatedOn
+
+    LikelyDestination:
+      type: object
+      properties:
+        teamId:
+          type: string
+          example: "tm777"
+        probability:
+          type: number
+          format: float
+          description: 0-1 arası olasılık
+          example: 0.42
+        expectedFee:
+          $ref: "#/components/schemas/Money"
+      required:
+        - teamId
+        - probability
+
+    PlayerValuePrediction:
+      type: object
+      description: AI oyuncu piyasa değeri tahmin sonucu
+      properties:
+        playerId:
+          type: string
+          example: "ply789"
+        predictedValue:
+          $ref: "#/components/schemas/Money"
+        horizonMonths:
+          type: integer
+          description: Tahmin ufku (ay)
+          example: 12
+        factors:
+          type: array
+          description: Tahmine etki eden özet faktörler
+          items:
+            type: string
+          example: ["Performans artışı", "Yaş faktörü", "Lig seviyesi"]
+      required:
+        - playerId
+        - predictedValue
+        - horizonMonths
+
+    TransferTrendsReport:
+      type: object
+      description: AI transfer trend analizi raporu
+      properties:
+        season:
+          type: string
+          example: "2025-2026"
+        league:
+          type: string
+          example: "Süper Lig"
+        insights:
+          type: array
+          items:
+            type: string
+          example:
+            - "Forvet transferlerinde ücret ortalaması yükseldi."
+            - "Genç oyuncu transferlerinde artış gözlendi."
+        topPositionsBySpend:
+          type: array
+          items:
+            $ref: "#/components/schemas/PositionSpend"
+      required:
+        - insights
+
+    PositionSpend:
+      type: object
+      properties:
+        position:
+          type: string
+          example: "FW"
+        totalSpend:
+          $ref: "#/components/schemas/Money"
+      required:
+        - position
+        - totalSpend

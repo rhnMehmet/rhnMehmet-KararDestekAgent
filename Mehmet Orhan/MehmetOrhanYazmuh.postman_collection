@@ -1,0 +1,327 @@
+{
+  "info": {
+    "_postman_id": "4d205dbe-589f-4bad-bfd4-56122b4c683a",
+    "name": "yazmuh",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "50713504",
+    "_collection_link": "https://go.postman.co/collection/50713504-4d205dbe-589f-4bad-bfd4-56122b4c683a?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Mehmet favori takım ekle",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ZDE5YzJkYjFlMmI3YWFkNTRkY2MyMyIsInJvbGUiOiJ1c2VyIiwiZW1haWwiOiJtZGVuZW1lQGdtYWlsLmNvbSIsImlhdCI6MTc3NTM0NTEyNCwiZXhwIjoxNzc1NDMxNTI0fQ.IgWEekzujhO_lOQuYfuutcxNeHUJbFmDCGbaH0UKNu4",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"teamId\": 78\r\n}\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://transfera-backend.vercel.app/users/69d19c2db1e2b7aad54dcc23/favorites/teams",
+          "protocol": "https",
+          "host": [
+            "transfera-backend",
+            "vercel",
+            "app"
+          ],
+          "path": [
+            "users",
+            "69d19c2db1e2b7aad54dcc23",
+            "favorites",
+            "teams"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Mehmet Bildirim Tercihlerini Güncelleme",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ZDE5YzJkYjFlMmI3YWFkNTRkY2MyMyIsInJvbGUiOiJ1c2VyIiwiZW1haWwiOiJtZGVuZW1lQGdtYWlsLmNvbSIsImlhdCI6MTc3NTM0NTEyNCwiZXhwIjoxNzc1NDMxNTI0fQ.IgWEekzujhO_lOQuYfuutcxNeHUJbFmDCGbaH0UKNu4",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"transferUpdates\": true,\r\n  \"matchAlerts\": false,\r\n  \"newsletter\": true\r\n}\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://transfera-backend.vercel.app/users/69d19c2db1e2b7aad54dcc23/notifications",
+          "protocol": "https",
+          "host": [
+            "transfera-backend",
+            "vercel",
+            "app"
+          ],
+          "path": [
+            "users",
+            "69d19c2db1e2b7aad54dcc23",
+            "notifications"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Mehmet Piyasa Değeri Görüntüleme",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://transfera-backend.vercel.app/players/6983809/market-value",
+          "protocol": "https",
+          "host": [
+            "transfera-backend",
+            "vercel",
+            "app"
+          ],
+          "path": [
+            "players",
+            "6983809",
+            "market-value"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Mehmet admin panel",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5Y2ZjN2U5ODA1MDZiMjYyY2E3N2RmYiIsInJvbGUiOiJhZG1pbiIsImVtYWlsIjoiYWRtaW5AdGVzdC5jb20iLCJpYXQiOjE3NzUzNDU3MDcsImV4cCI6MTc3NTQzMjEwN30.EhcE0S_FKftnm7-F4D-rlQcfa4cMqhkkJ8rjMX2UKRw",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://transfera-backend.vercel.app/admin/users",
+          "protocol": "https",
+          "host": [
+            "transfera-backend",
+            "vercel",
+            "app"
+          ],
+          "path": [
+            "admin",
+            "users"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "takım kadrosu görüntüleme",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://transfera-backend.vercel.app/teams/78/squad",
+          "protocol": "https",
+          "host": [
+            "transfera-backend",
+            "vercel",
+            "app"
+          ],
+          "path": [
+            "teams",
+            "78",
+            "squad"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Mehmet AI takım raporu",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://transfera-backend.vercel.app/ai/team-report/78",
+          "protocol": "https",
+          "host": [
+            "transfera-backend",
+            "vercel",
+            "app"
+          ],
+          "path": [
+            "ai",
+            "team-report",
+            "78"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Mehmet yorum silme",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ZDE5YzJkYjFlMmI3YWFkNTRkY2MyMyIsInJvbGUiOiJ1c2VyIiwiZW1haWwiOiJtZGVuZW1lQGdtYWlsLmNvbSIsImlhdCI6MTc3NTM0NjYwMSwiZXhwIjoxNzc1NDMzMDAxfQ.qzxM_XzD6FOb-OuOI5lHt0eRP6Y0ckMmgN7Fy_s0b4k",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "https://transfera-backend.vercel.app/api/comments/69d1a46c76508b5e38a1b822",
+          "protocol": "https",
+          "host": [
+            "transfera-backend",
+            "vercel",
+            "app"
+          ],
+          "path": [
+            "api",
+            "comments",
+            "69d1a46c76508b5e38a1b822"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Mehmet yorum listeme",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://transfera-backend.vercel.app/api/comments",
+          "protocol": "https",
+          "host": [
+            "transfera-backend",
+            "vercel",
+            "app"
+          ],
+          "path": [
+            "api",
+            "comments"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Mehmet çıkış",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ZDE5YzJkYjFlMmI3YWFkNTRkY2MyMyIsInJvbGUiOiJ1c2VyIiwiZW1haWwiOiJtZGVuZW1lQGdtYWlsLmNvbSIsImlhdCI6MTc3NTM1Njk4NCwiZXhwIjoxNzc1NDQzMzg0fQ.kyRcP8c21JA6iy9xGjrobgwn812oe-KJfpn9D84KYFM",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://transfera-backend.vercel.app/users/logout",
+          "protocol": "https",
+          "host": [
+            "transfera-backend",
+            "vercel",
+            "app"
+          ],
+          "path": [
+            "users",
+            "logout"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Mehmet kullanıcı silme",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ZDIwMTRlZjc2NDA4MjU1MTVkYTVhNCIsInJvbGUiOiJ1c2VyIiwiZW1haWwiOiJkM0BnbWFpbC5jb20iLCJpYXQiOjE3NzUzNzA1NzQsImV4cCI6MTc3NTQ1Njk3NH0.b_vS5U-9MgM7BxNL6qx_VjJKfvZFJDQ_luBkVa2y4QA",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "https://transfera-backend.vercel.app/users/69d2014ef7640825515da5a4",
+          "protocol": "https",
+          "host": [
+            "transfera-backend",
+            "vercel",
+            "app"
+          ],
+          "path": [
+            "users",
+            "69d2014ef7640825515da5a4"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

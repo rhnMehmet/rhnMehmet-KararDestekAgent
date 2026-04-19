@@ -1,0 +1,325 @@
+{
+  "info": {
+    "_postman_id": "4195456d-2915-4120-a6af-ab4b7ee1d7fc",
+    "name": "New Collection",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "50800001"
+  },
+  "item": [
+    {
+      "name": "kullanici kayit",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"name\": \"alicaan\",\r\n  \"surname\": \"can\",\r\n  \"email\": \"deneme4@gmail.com\",\r\n  \"password\": \"123456\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://transfera-backend.vercel.app/users/register",
+          "protocol": "https",
+          "host": [
+            "transfera-backend",
+            "vercel",
+            "app"
+          ],
+          "path": [
+            "users",
+            "register"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "1.profil güncelleme",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ZDIwMTNkZjc2NDA4MjU1MTVkYTU5ZCIsInJvbGUiOiJ1c2VyIiwiZW1haWwiOiJkZW5lbWU0QGdtYWlsLmNvbSIsImlhdCI6MTc3NTM3MDU1OCwiZXhwIjoxNzc1NDU2OTU4fQ.YZu8VDWsFna0WqNgu1ipuRnTwySt0fjoGpjDKaysxIQ",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n \"name\": \"alican\",\r\n  \"surname\": \"caaan\",\r\n  \"email\": \"deneme4@gmail.com\"\r\n  }",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://transfera-backend.vercel.app/users/69d2013df7640825515da59d",
+          "protocol": "https",
+          "host": [
+            "transfera-backend",
+            "vercel",
+            "app"
+          ],
+          "path": [
+            "users",
+            "69d2013df7640825515da59d"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "2.Şifre Değiştirme",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ZDIwMTNkZjc2NDA4MjU1MTVkYTU5ZCIsInJvbGUiOiJ1c2VyIiwiZW1haWwiOiJkZW5lbWU0QGdtYWlsLmNvbSIsImlhdCI6MTc3NTM3MDU1OCwiZXhwIjoxNzc1NDU2OTU4fQ.YZu8VDWsFna0WqNgu1ipuRnTwySt0fjoGpjDKaysxIQ",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"currentPassword\": \"123456\",\r\n  \"newPassword\": \"1234567\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://transfera-backend.vercel.app/users/69d2013df7640825515da59d/password",
+          "protocol": "https",
+          "host": [
+            "transfera-backend",
+            "vercel",
+            "app"
+          ],
+          "path": [
+            "users",
+            "69d2013df7640825515da59d",
+            "password"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "3.Favori Oyuncu Ekleme",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ZDIwMTNkZjc2NDA4MjU1MTVkYTU5ZCIsInJvbGUiOiJ1c2VyIiwiZW1haWwiOiJkZW5lbWU0QGdtYWlsLmNvbSIsImlhdCI6MTc3NTM3MDU1OCwiZXhwIjoxNzc1NDU2OTU4fQ.YZu8VDWsFna0WqNgu1ipuRnTwySt0fjoGpjDKaysxIQ",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"playerId\": 6983809\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://transfera-backend.vercel.app/users/69d2013df7640825515da59d/favorites/players",
+          "protocol": "https",
+          "host": [
+            "transfera-backend",
+            "vercel",
+            "app"
+          ],
+          "path": [
+            "users",
+            "69d2013df7640825515da59d",
+            "favorites",
+            "players"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "4.takım listeleme",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ZDIwMTNkZjc2NDA4MjU1MTVkYTU5ZCIsInJvbGUiOiJ1c2VyIiwiZW1haWwiOiJkZW5lbWU0QGdtYWlsLmNvbSIsImlhdCI6MTc3NTM3MDU1OCwiZXhwIjoxNzc1NDU2OTU4fQ.YZu8VDWsFna0WqNgu1ipuRnTwySt0fjoGpjDKaysxIQ",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://transfera-backend.vercel.app/teams?league=Premier%20League&limit=8&page=1",
+          "protocol": "https",
+          "host": [
+            "transfera-backend",
+            "vercel",
+            "app"
+          ],
+          "path": [
+            "teams"
+          ],
+          "query": [
+            {
+              "key": "league",
+              "value": "Premier%20League"
+            },
+            {
+              "key": "limit",
+              "value": "8"
+            },
+            {
+              "key": "page",
+              "value": "1"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "5.Takım Detayı Görüntüleme",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://transfera-backend.vercel.app/teams/83",
+          "protocol": "https",
+          "host": [
+            "transfera-backend",
+            "vercel",
+            "app"
+          ],
+          "path": [
+            "teams",
+            "83"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "6.Favori Oyuncu Silme",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ZDIwMTNkZjc2NDA4MjU1MTVkYTU5ZCIsInJvbGUiOiJ1c2VyIiwiZW1haWwiOiJkZW5lbWU0QGdtYWlsLmNvbSIsImlhdCI6MTc3NTM3MDU1OCwiZXhwIjoxNzc1NDU2OTU4fQ.YZu8VDWsFna0WqNgu1ipuRnTwySt0fjoGpjDKaysxIQ",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "https://transfera-backend.vercel.app/users/69d2013df7640825515da59d/favorites/players/6983809",
+          "protocol": "https",
+          "host": [
+            "transfera-backend",
+            "vercel",
+            "app"
+          ],
+          "path": [
+            "users",
+            "69d2013df7640825515da59d",
+            "favorites",
+            "players",
+            "6983809"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "7.Oyuncu Transfer Geçmişi",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://transfera-backend.vercel.app/transfers?playerId=6983809",
+          "protocol": "https",
+          "host": [
+            "transfera-backend",
+            "vercel",
+            "app"
+          ],
+          "path": [
+            "transfers"
+          ],
+          "query": [
+            {
+              "key": "playerId",
+              "value": "6983809"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "8.Oyuncu Değer Tahmini (AI)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://transfera-backend.vercel.app/ai/player-value/6983809",
+          "protocol": "https",
+          "host": [
+            "transfera-backend",
+            "vercel",
+            "app"
+          ],
+          "path": [
+            "ai",
+            "player-value",
+            "6983809"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
