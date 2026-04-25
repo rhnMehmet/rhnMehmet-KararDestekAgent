@@ -1,0 +1,401 @@
+Async / Await
+
+1. Async fonksiyonu neden kullandınız?
+Bu projede veri işlemleri anlık dönmüyor. Kullanıcı bilgisi, yorumlar, oyuncu verileri, takım verileri ve agent cevabı backend veya dış API üzerinden geliyor. Bu yüzden işlemin tamamlanmasını beklemek için async/await kullandık.
+
+2. Await ne işe yarıyor?
+Await, ilgili işlemin bitmesini bekler. Mesela API’den veri gelmeden sonraki adıma geçilmesini engeller. Böylece eksik veriyle işlem yapılmaz.
+
+3. Async kullanmazsanız ne olurdu?
+Kod işlem tamamlanmadan devam ederdi. Bu da undefined, boş veri veya hatalı cevap üretirdi.
+
+4. Projede async nerelerde var?
+Login, register, yorum ekleme, favoriler, oyuncu-takım verisi çekme ve agent chat akışında var. Hem frontend’de hem backend’de kullanılıyor.
+
+5. Her fonksiyon neden async değil?
+Çünkü her fonksiyon dış kaynağa gitmiyor. String düzenleme, filtreleme, karşılaştırma gibi basit işlemler senkron çalışıyor.
+
+MVC Mantığı
+
+6. Projede MVC yapısı var mı?
+Evet, genel olarak MVC mantığına yakın bir yapı var. Route istek alıyor, controller isteği yönetiyor, service iş mantığını yapıyor, model ise veritabanı yapısını temsil ediyor.
+
+7. MVC neden kullanılır?
+Kodun düzenli, okunabilir ve sürdürülebilir olması için kullanılır. Her katmanın görevi ayrı olduğu için geliştirme ve hata ayıklama kolaylaşır.
+
+8. Controller ne iş yapıyor?
+Controller request’i alır, gerekli kontrolleri yapar, service’i çağırır ve response döner. Yani kullanıcı isteği ile iş mantığı arasında köprü görevi görür.
+
+9. Service katmanı ne iş yapıyor?
+Asıl iş mantığı service katmanında olur. Mesela oyuncu arama, takım analizi, agent cevabı oluşturma gibi işlemler burada yapılır.
+
+10. Model neyi temsil ediyor?
+Model, veritabanındaki veri yapısını temsil eder. Örneğin kullanıcı, yorum, favori veya override kayıtları model üzerinden tanımlanır.
+
+Middleware
+
+11. Middleware nedir?
+Middleware, request ile response arasına giren ara katmandır. İstek backend’e ulaşmadan önce kontrol veya işlem yapar.
+
+12. Bu projede middleware neden kullanılır?
+Kimlik doğrulama, yetki kontrolü, token çözme gibi işlemler için kullanılır. Özellikle korumalı sayfalarda gerekli.
+
+13. Auth middleware ne yapar?
+Kullanıcının token bilgisini kontrol eder. Token geçerliyse kullanıcıyı sisteme tanıtır, geçersizse erişimi engeller.
+
+14. Middleware olmasaydı ne olurdu?
+Her controller içinde tekrar tekrar aynı kontrolü yazmak gerekirdi. Bu da kod tekrarına ve dağınık yapıya neden olurdu.
+
+JWT
+
+15. JWT neden kullandınız?
+Kullanıcının oturum bilgisini güvenli şekilde taşımak için kullandık. Kullanıcı giriş yaptıktan sonra sistem ona bir token veriyor ve sonraki isteklerde bu token ile kimliği doğrulanıyor.
+
+16. JWT’nin avantajı nedir?
+Sunucuda sürekli session tutmadan kimlik doğrulama yapmayı sağlar. Daha pratik ve yaygın bir yöntemdir.
+
+17. Token frontend’de neden tutuluyor?
+Çünkü kullanıcı her işlemde yeniden giriş yapmasın diye. Frontend token’ı saklayıp backend’e göndererek oturumu devam ettiriyor.
+
+18. Admin yetkisi nasıl kontrol ediliyor?
+Önce kullanıcı doğrulanıyor, sonra rol bilgisine bakılıyor. Eğer rol admin ise admin sayfalarına veya işlemlerine izin veriliyor.
+
+Agent Mantığı
+
+19. Agent bu projede ne yapıyor?
+Agent, kullanıcının futbol ile ilgili sorusunu alıyor, sorunun oyuncu, takım, lig veya karşılaştırma türünde olup olmadığını anlıyor, sonra uygun veriyi çekip cevap üretiyor.
+
+20. Agent nasıl karar veriyor?
+Sorudaki kelimeleri analiz ediyor. Mesela oyuncu adı mı var, takım sorusu mu, transfer trendi mi, karşılaştırma mı diye ayırıyor. Sonra uygun servisi çağırıyor.
+
+21. Agent neden sadece düz cevap vermiyor da veri çekiyor?
+Çünkü amaç projeye uygun, veri destekli cevap üretmek. Yani sadece metin üretmek değil, oyuncu ve takım bilgilerine göre anlamlı cevap vermek.
+
+22. Agent ile normal arama farkı ne?
+Normal arama sadece veri listeler. Agent ise soruyu yorumlayıp daha açıklayıcı ve bağlama uygun cevap oluşturur.
+
+23. Agent kısmında neden service yapısı kullandınız?
+Çünkü agent mantığı biraz daha karmaşık. Controller içinde yazmak kodu kalabalıklaştırırdı. Bu yüzden agent mantığını service katmanında tuttuk.
+
+API ve Frontend Bağlantısı
+
+24. Frontend backend ile nasıl haberleşiyor?
+HTTP istekleri üzerinden haberleşiyor. Frontend, api.post, api.get gibi çağrılarla backend endpoint’lerine istek gönderiyor.
+
+25. Backend neden ayrı tutuldu?
+Çünkü veri yönetimi, kimlik doğrulama, iş mantığı ve dış API bağlantıları backend’de daha doğru yönetilir. Frontend sadece kullanıcı arayüzünü yönetir.
+
+26. Frontend neden doğrudan veritabanına bağlanmıyor?
+Güvenlik ve mimari düzen için. Veritabanına doğrudan frontend bağlanırsa sistem kontrolsüz ve güvensiz olur.
+
+27. API neden gerekli?
+Çünkü frontend ile backend arasında standart ve kontrollü iletişim sağlar. Veri alışverişi bu katman üzerinden güvenli şekilde yapılır.
+
+Veritabanı
+
+28. Veritabanını neden kullandınız?
+Kullanıcılar, yorumlar, roller, favoriler ve manuel güncellemeler gibi kalıcı verileri tutmak için kullandık.
+
+29. Veritabanı olmasa ne olurdu?
+Veriler kalıcı olmazdı. Uygulama kapanınca veya yenilenince kullanıcı bilgileri, yorumlar ve favoriler kaybolurdu.
+
+30. Veritabanı ile dış API arasındaki fark ne?
+Veritabanı bizim tuttuğumuz kalıcı veriler içindir. Dış API ise futbol verilerini almak için kullandığımız harici kaynaktır.
+
+Dış API
+
+31. Neden dış futbol API’si kullandınız?
+Çünkü takım, lig, oyuncu ve transfer verilerini güncel ve hazır şekilde almak için bu daha mantıklıydı. Sıfırdan böyle bir veri tabanı kurmak çok zor olurdu.
+
+32. Dış API gelmezse ne olur?
+Bazı ekranlar eksik veri gösterebilir veya hata dönebilir. Bu yüzden hata yönetimi yapmak önemlidir.
+
+33. Servis katmanında API’yi neden soyutladınız?
+Kod tekrarını önlemek ve API çağrılarını tek yerde toplamak için. Böylece bakım yapmak daha kolay olur.
+
+React Tarafı
+
+34. useState neden kullandınız?
+Sayfadaki değişen verileri tutmak için kullandık. Mesela input değeri, mesaj listesi, loading durumu gibi veriler state içinde tutulur.
+
+35. useEffect neden kullanılır?
+Sayfa açıldığında veri çekmek veya belirli bir değişiklik olduğunda işlem yapmak için kullanılır.
+
+36. Form gönderirken neden async fonksiyon kullandınız?
+Çünkü backend’e istek atılıyor. Sonucu beklemeden kullanıcıya doğru geri bildirim veremeyiz.
+
+Genel Mimari
+
+37. Bu projede katmanlı yapı neden önemli?
+Çünkü proje büyüdükçe kodun düzenli kalmasını sağlar. Frontend, controller, service ve model ayrı olduğu zaman değişiklik yapmak daha kolay olur.
+
+38. Hata yönetimini neden try/catch ile yaptınız?
+API, veritabanı veya agent işlemlerinde hata çıkabilir. Uygulamanın çökmesini önlemek ve kullanıcıya anlamlı hata göstermek için try/catch kullandık.
+
+39. Projede güvenlik adına ne var?
+JWT doğrulama, rol kontrolü, korumalı route mantığı ve backend üzerinden veri erişimi var. Yani her kullanıcı her işlemi doğrudan yapamıyor.
+
+40. Bu projede en önemli geliştirme mantığı neydi?
+Projeyi sadece veri gösteren bir yapı olmaktan çıkarıp yorumlayabilen bir sisteme dönüştürmekti. Bu yüzden agent, analiz ve rol bazlı yapı önemli oldu.
+
+
+
+
+
+
+
+
+Async / Await
+
+1. Async fonksiyonu neden kullandınız?
+Bu projede veri işlemleri anlık dönmüyor. Kullanıcı bilgisi, yorumlar, oyuncu verileri, takım verileri ve agent cevabı backend veya dış API üzerinden geliyor. Bu yüzden işlemin tamamlanmasını beklemek için async/await kullandık.
+
+2. Await ne işe yarıyor?
+Await, ilgili işlemin bitmesini bekler. Mesela API’den veri gelmeden sonraki adıma geçilmesini engeller. Böylece eksik veriyle işlem yapılmaz.
+
+3. Async kullanmazsanız ne olurdu?
+Kod işlem tamamlanmadan devam ederdi. Bu da undefined, boş veri veya hatalı cevap üretirdi.
+
+4. Projede async nerelerde var?
+Login, register, yorum ekleme, favoriler, oyuncu-takım verisi çekme ve agent chat akışında var. Hem frontend’de hem backend’de kullanılıyor.
+
+5. Her fonksiyon neden async değil?
+Çünkü her fonksiyon dış kaynağa gitmiyor. String düzenleme, filtreleme, karşılaştırma gibi basit işlemler senkron çalışıyor.
+
+MVC Mantığı
+
+6. Projede MVC yapısı var mı?
+Evet, genel olarak MVC mantığına yakın bir yapı var. Route istek alıyor, controller isteği yönetiyor, service iş mantığını yapıyor, model ise veritabanı yapısını temsil ediyor.
+
+7. MVC neden kullanılır?
+Kodun düzenli, okunabilir ve sürdürülebilir olması için kullanılır. Her katmanın görevi ayrı olduğu için geliştirme ve hata ayıklama kolaylaşır.
+
+8. Controller ne iş yapıyor?
+Controller request’i alır, gerekli kontrolleri yapar, service’i çağırır ve response döner. Yani kullanıcı isteği ile iş mantığı arasında köprü görevi görür.
+
+9. Service katmanı ne iş yapıyor?
+Asıl iş mantığı service katmanında olur. Mesela oyuncu arama, takım analizi, agent cevabı oluşturma gibi işlemler burada yapılır.
+
+10. Model neyi temsil ediyor?
+Model, veritabanındaki veri yapısını temsil eder. Örneğin kullanıcı, yorum, favori veya override kayıtları model üzerinden tanımlanır.
+
+Middleware
+
+11. Middleware nedir?
+Middleware, request ile response arasına giren ara katmandır. İstek backend’e ulaşmadan önce kontrol veya işlem yapar.
+
+12. Bu projede middleware neden kullanılır?
+Kimlik doğrulama, yetki kontrolü, token çözme gibi işlemler için kullanılır. Özellikle korumalı sayfalarda gerekli.
+
+13. Auth middleware ne yapar?
+Kullanıcının token bilgisini kontrol eder. Token geçerliyse kullanıcıyı sisteme tanıtır, geçersizse erişimi engeller.
+
+14. Middleware olmasaydı ne olurdu?
+Her controller içinde tekrar tekrar aynı kontrolü yazmak gerekirdi. Bu da kod tekrarına ve dağınık yapıya neden olurdu.
+
+JWT
+
+15. JWT neden kullandınız?
+Kullanıcının oturum bilgisini güvenli şekilde taşımak için kullandık. Kullanıcı giriş yaptıktan sonra sistem ona bir token veriyor ve sonraki isteklerde bu token ile kimliği doğrulanıyor.
+
+16. JWT’nin avantajı nedir?
+Sunucuda sürekli session tutmadan kimlik doğrulama yapmayı sağlar. Daha pratik ve yaygın bir yöntemdir.
+
+17. Token frontend’de neden tutuluyor?
+Çünkü kullanıcı her işlemde yeniden giriş yapmasın diye. Frontend token’ı saklayıp backend’e göndererek oturumu devam ettiriyor.
+
+18. Admin yetkisi nasıl kontrol ediliyor?
+Önce kullanıcı doğrulanıyor, sonra rol bilgisine bakılıyor. Eğer rol admin ise admin sayfalarına veya işlemlerine izin veriliyor.
+
+Agent Mantığı
+
+19. Agent bu projede ne yapıyor?
+Agent, kullanıcının futbol ile ilgili sorusunu alıyor, sorunun oyuncu, takım, lig veya karşılaştırma türünde olup olmadığını anlıyor, sonra uygun veriyi çekip cevap üretiyor.
+
+20. Agent nasıl karar veriyor?
+Sorudaki kelimeleri analiz ediyor. Mesela oyuncu adı mı var, takım sorusu mu, transfer trendi mi, karşılaştırma mı diye ayırıyor. Sonra uygun servisi çağırıyor.
+
+21. Agent neden sadece düz cevap vermiyor da veri çekiyor?
+Çünkü amaç projeye uygun, veri destekli cevap üretmek. Yani sadece metin üretmek değil, oyuncu ve takım bilgilerine göre anlamlı cevap vermek.
+
+22. Agent ile normal arama farkı ne?
+Normal arama sadece veri listeler. Agent ise soruyu yorumlayıp daha açıklayıcı ve bağlama uygun cevap oluşturur.
+
+23. Agent kısmında neden service yapısı kullandınız?
+Çünkü agent mantığı biraz daha karmaşık. Controller içinde yazmak kodu kalabalıklaştırırdı. Bu yüzden agent mantığını service katmanında tuttuk.
+
+API ve Frontend Bağlantısı
+
+24. Frontend backend ile nasıl haberleşiyor?
+HTTP istekleri üzerinden haberleşiyor. Frontend, api.post, api.get gibi çağrılarla backend endpoint’lerine istek gönderiyor.
+
+25. Backend neden ayrı tutuldu?
+Çünkü veri yönetimi, kimlik doğrulama, iş mantığı ve dış API bağlantıları backend’de daha doğru yönetilir. Frontend sadece kullanıcı arayüzünü yönetir.
+
+26. Frontend neden doğrudan veritabanına bağlanmıyor?
+Güvenlik ve mimari düzen için. Veritabanına doğrudan frontend bağlanırsa sistem kontrolsüz ve güvensiz olur.
+
+27. API neden gerekli?
+Çünkü frontend ile backend arasında standart ve kontrollü iletişim sağlar. Veri alışverişi bu katman üzerinden güvenli şekilde yapılır.
+
+Veritabanı
+
+28. Veritabanını neden kullandınız?
+Kullanıcılar, yorumlar, roller, favoriler ve manuel güncellemeler gibi kalıcı verileri tutmak için kullandık.
+
+29. Veritabanı olmasa ne olurdu?
+Veriler kalıcı olmazdı. Uygulama kapanınca veya yenilenince kullanıcı bilgileri, yorumlar ve favoriler kaybolurdu.
+
+30. Veritabanı ile dış API arasındaki fark ne?
+Veritabanı bizim tuttuğumuz kalıcı veriler içindir. Dış API ise futbol verilerini almak için kullandığımız harici kaynaktır.
+
+Dış API
+
+31. Neden dış futbol API’si kullandınız?
+Çünkü takım, lig, oyuncu ve transfer verilerini güncel ve hazır şekilde almak için bu daha mantıklıydı. Sıfırdan böyle bir veri tabanı kurmak çok zor olurdu.
+
+32. Dış API gelmezse ne olur?
+Bazı ekranlar eksik veri gösterebilir veya hata dönebilir. Bu yüzden hata yönetimi yapmak önemlidir.
+
+33. Servis katmanında API’yi neden soyutladınız?
+Kod tekrarını önlemek ve API çağrılarını tek yerde toplamak için. Böylece bakım yapmak daha kolay olur.
+
+React Tarafı
+
+34. useState neden kullandınız?
+Sayfadaki değişen verileri tutmak için kullandık. Mesela input değeri, mesaj listesi, loading durumu gibi veriler state içinde tutulur.
+
+35. useEffect neden kullanılır?
+Sayfa açıldığında veri çekmek veya belirli bir değişiklik olduğunda işlem yapmak için kullanılır.
+
+36. Form gönderirken neden async fonksiyon kullandınız?
+Çünkü backend’e istek atılıyor. Sonucu beklemeden kullanıcıya doğru geri bildirim veremeyiz.
+
+Genel Mimari
+
+37. Bu projede katmanlı yapı neden önemli?
+Çünkü proje büyüdükçe kodun düzenli kalmasını sağlar. Frontend, controller, service ve model ayrı olduğu zaman değişiklik yapmak daha kolay olur.
+
+38. Hata yönetimini neden try/catch ile yaptınız?
+API, veritabanı veya agent işlemlerinde hata çıkabilir. Uygulamanın çökmesini önlemek ve kullanıcıya anlamlı hata göstermek için try/catch kullandık.
+
+39. Projede güvenlik adına ne var?
+JWT doğrulama, rol kontrolü, korumalı route mantığı ve backend üzerinden veri erişimi var. Yani her kullanıcı her işlemi doğrudan yapamıyor.
+
+40. Bu projede en önemli geliştirme mantığı neydi?
+Projeyi sadece veri gösteren bir yapı olmaktan çıkarıp yorumlayabilen bir sisteme dönüştürmekti. Bu yüzden agent, analiz ve rol bazlı yapı önemli oldu.
+
+İstersen bir sonraki mesajda sana bunu daha da kullanışlı hale getirip şunları da hazırlayayım:
+
+hocanın sorabileceği en kritik 20 soru
+tek cümlelik ezber cevaplar
+bir dakikalık proje sunum metni
+bu projeyi baştan sona nasıl anlatsam metni
+
+12:40
+1 2 4 ver
+12:42
+
+
+
+Süper, sana direkt işine yarayacak kısmı veriyorum.
+
+1. Hocanın Sorabileceği En Kritik 20 Soru
+
+1. Bu proje ne yapıyor?
+Bu proje futbolcu, takım, lig ve transfer verilerini analiz eden bir karar destek sistemi. Kullanıcı hem verileri görüntüleyebiliyor hem de agent üzerinden yorum alabiliyor.
+
+2. Bu projede sizin katkınız ne oldu?
+Ben agent mantığını, local çalışma düzenini, admin yetkisiyle ilgili kısmı ve futbol odaklı soru-cevap akışını projeye uygun hale getirdim.
+
+3. Agent bu projede ne işe yarıyor?
+Agent, kullanıcının futbol ile ilgili sorusunu yorumlayıp oyuncu, takım, lig veya transfer verilerine göre açıklayıcı cevap üretiyor.
+
+4. Agent nasıl çalışıyor?
+Önce sorunun türünü anlıyor. Sonra oyuncu mu, takım mı, lig mi diye ayırıyor. Ardından ilgili veriyi çekip buna göre cevap oluşturuyor.
+
+5. Neden async yapı kullandınız?
+Çünkü bu projede API ve veritabanı işlemleri var. Veri anında gelmediği için işlemin tamamlanmasını beklemek gerekiyor.
+
+6. Backend neden gerekli?
+Kimlik doğrulama, veritabanı işlemleri, dış API bağlantıları ve agent mantığı backend tarafında daha güvenli ve düzenli yönetiliyor.
+
+7. Frontend neden doğrudan veritabanına bağlanmıyor?
+Güvenlik ve mimari sebeplerden dolayı. Veritabanına erişim kontrollü biçimde backend üzerinden yapılmalı.
+
+8. JWT neden kullandınız?
+Kullanıcı oturumunu güvenli şekilde yönetmek için kullandık. Kullanıcı giriş yaptıktan sonra token ile doğrulanıyor.
+
+9. Admin yetkisi nasıl veriliyor?
+Kullanıcının rol bilgisi tutuluyor. Rol admin ise yönetim ekranlarına erişebiliyor.
+
+10. Middleware nedir, bu projede var mı?
+Evet var. Middleware, request ile controller arasındaki ara katmandır. Bu projede özellikle auth kontrolünde kullanılıyor.
+
+11. MVC yapısı bu projede var mı?
+Tam klasik MVC olmasa da benzer katmanlı yapı var. Route, controller, service ve model ayrımı mevcut.
+
+12. Service katmanını neden kullandınız?
+İş mantığını controller’dan ayırmak için kullandık. Böylece kod daha temiz ve sürdürülebilir oldu.
+
+13. Dış API neden kullanıldı?
+Oyuncu, takım, lig ve transfer verilerini hazır ve güncel şekilde almak için kullanıldı.
+
+14. Veritabanında neler tutuluyor?
+Kullanıcı bilgileri, roller, yorumlar, favoriler ve bazı manuel override kayıtları tutuluyor.
+
+15. Agent neden her soruya cevap vermiyor?
+Çünkü proje odaklı çalışıyor. Sadece futbol, takım, lig, oyuncu ve transfer bağlamındaki sorulara uygun cevap üretmesi amaçlandı.
+
+16. React tarafında state neden kullanıldı?
+Form verileri, kullanıcı bilgisi, mesaj akışı ve ekrandaki dinamik durumları yönetmek için.
+
+17. Try/catch neden kullandınız?
+API veya veritabanı hatalarında uygulamanın çökmesini engellemek ve kullanıcıya anlamlı hata göstermek için.
+
+18. Bu projenin en önemli özelliği ne?
+Sadece veri gösteren bir sistem değil; aynı zamanda futbol verisini yorumlayabilen bir karar destek yapısına sahip.
+
+19. Agent ile normal filtreleme arasındaki fark ne?
+Filtreleme sadece veriyi listeler. Agent ise soruyu yorumlayıp anlamlı, bağlama uygun cevap üretir.
+
+20. Bu projeyi geliştirirken en çok neye dikkat ettiniz?
+Var olan sistemi bozmadan, projeye uygun futbol odaklı agent mantığını entegre etmeye dikkat ettim.
+
+2. Tek Cümlelik Ezber Cevaplar
+
+Bunlar tam sözlüde pat diye söylemelik.
+
+Async kullandım çünkü projede API ve veritabanı işlemleri var.
+Await, veri gelmeden sonraki adıma geçilmesini engelliyor.
+Backend, güvenlik ve iş mantığını yönetmek için gerekli.
+Frontend sadece arayüz tarafını yönetiyor.
+JWT ile kullanıcı oturumunu güvenli şekilde kontrol ediyoruz.
+Middleware, istek controller’a gitmeden önce araya giren kontrol katmanıdır.
+Service katmanı, iş mantığını controller’dan ayırmak için kullanıldı.
+Model, veritabanındaki veri yapısını temsil ediyor.
+Agent, kullanıcı sorusunu yorumlayıp uygun futbol verisiyle cevap üretir.
+Bu proje klasik veri listeleme yerine yorum üreten bir karar destek yapısına sahip.
+Dış API’yi güncel futbol verisini hazır almak için kullandık.
+Veritabanı, kullanıcı ve sistem verilerini kalıcı tutmak için gerekli.
+Admin rolü sayesinde yetkili işlemleri diğer kullanıcılardan ayırdık.
+Try/catch ile sistemin hata durumlarında kontrollü çalışmasını sağladık.
+React state yapısı ile ekrandaki dinamik verileri yönettik.
+Bu projede katmanlı yapı kullandık çünkü kodun bakımı daha kolay oluyor.
+Agent kısmında async yapı kullanmamın sebebi veri toplayarak cevap üretmesi.
+Frontend backend ile HTTP istekleri üzerinden haberleşiyor.
+Projede güvenlik için token doğrulama ve rol kontrolü var.
+Bu projenin farkı, futbol verisini sadece göstermesi değil, yorumlamasıdır.
+4. Bu Projeyi Baştan Sona Nasıl Anlatırım?
+
+Bunu biraz ezberlersen çok rahat taşırsın:
+
+“Bu proje futbol odaklı bir karar destek sistemi. Kullanıcı sisteme kayıt olup giriş yapabiliyor. Daha sonra oyuncu, takım, lig, transfer, yorum ve favori gibi özellikleri kullanabiliyor. Sistem frontend ve backend olarak ayrılmış durumda. Frontend tarafında kullanıcı arayüzü var, backend tarafında ise iş mantığı, kimlik doğrulama, veritabanı işlemleri ve dış futbol API bağlantıları yer alıyor.
+
+Projede kullanıcı yetkilendirmesi için JWT yapısı kullandık. Böylece giriş yapan kullanıcı token ile doğrulanıyor. Ayrıca rol yapısı sayesinde admin kullanıcılar normal kullanıcılardan farklı işlemler yapabiliyor.
+
+Veri tarafında hem veritabanı hem de dış API kullanılıyor. Veritabanında kullanıcı, yorum, favori ve bazı sistem verileri tutuluyor. Futbolcu, takım, lig ve transfer gibi dinamik veriler ise dış futbol API’sinden alınıyor.
+
+Bu projedeki en önemli geliştirme alanlarından biri agent kısmı oldu. Agent, kullanıcının yazdığı futbol sorusunu analiz ediyor. Sorunun oyuncu karşılaştırması mı, takım özeti mi, lig trendi mi olduğunu anlamaya çalışıyor. Sonra buna uygun veriyi çekip kullanıcıya açıklayıcı bir cevap üretiyor. Yani sistem sadece veri gösteren bir yapı değil, aynı zamanda veriyi yorumlayan bir yapı haline geliyor.
+
+Kod yapısında controller, service ve model mantığına dikkat ettik. Böylece kod daha düzenli, okunabilir ve sürdürülebilir oldu. Özellikle async/await yapısı da API ve veritabanı işlemlerinde doğru veri akışı sağlamak için kullanıldı.”

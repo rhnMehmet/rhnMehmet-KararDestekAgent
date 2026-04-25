@@ -15,6 +15,7 @@ const ProfilePage = lazy(() => import("./pages/ProfilePage"));
 const AdminPage = lazy(() => import("./pages/AdminPage"));
 const AdminUserPage = lazy(() => import("./pages/AdminUserPage"));
 const CommentsCommunityPage = lazy(() => import("./pages/CommentsCommunityPage"));
+const AgentPage = lazy(() => import("./pages/AgentPage"));
 
 function getDefaultRoute() {
   const currentUser = storage.getUser();
@@ -141,6 +142,14 @@ export default function App() {
               element={
                 <ProtectedRoute>
                   <CommentsCommunityPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/agent"
+              element={
+                <ProtectedRoute>
+                  <AgentPage />
                 </ProtectedRoute>
               }
             />

@@ -129,6 +129,9 @@ export default function CommentsCommunityPage() {
           <button className="dashboard-command-button" onClick={() => navigate("/comments")}>
             Yorumlar
           </button>
+          <button className="dashboard-command-button" onClick={() => navigate("/agent")}>
+            Agent
+          </button>
           <button className="dashboard-command-button" onClick={() => navigate("/favorites")}>
             Favoriler
           </button>

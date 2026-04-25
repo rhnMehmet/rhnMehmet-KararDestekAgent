@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 
 const User = require("../models/User");
 const TokenBlacklist = require("../models/TokenBlacklist");
+const { resolveUserRole } = require("../utils/localAdmin");
 const Comment = require("../models/Comment");
 const {
   isDatabaseAvailable,
@@ -22,7 +23,7 @@ function sanitizeUser(user) {
     name: source?.name,
     surname: source?.surname,
     email: source?.email,
-    role: source?.role,
+    role: resolveUserRole(source),
     favorites: {
       players: Array.isArray(source?.favorites?.players)
         ? source.favorites.players
@@ -45,7 +46,7 @@ function createToken(user) {
   return jwt.sign(
     {
       id: user._id.toString(),
-      role: user.role,
+      role: resolveUserRole(user),
       email: user.email,
     },
     JWT_SECRET,
@@ -65,7 +66,7 @@ function buildFallbackProfile(req) {
     name: fallbackName,
     surname: "",
     email,
-    role: req.user?.role || req.auth?.role || "user",
+    role: req.user?.role || req.auth?.role || resolveUserRole({ email }),
     favorites: {
       players: [],
       teams: [],

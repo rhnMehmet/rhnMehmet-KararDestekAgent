@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 
 const User = require("../models/User");
 const TokenBlacklist = require("../models/TokenBlacklist");
+const { resolveUserRole } = require("../utils/localAdmin");
 const { isDatabaseAvailable } = require("../utils/database");
 
 const JWT_SECRET = process.env.JWT_SECRET || "transfera-dev-secret";
@@ -22,7 +23,7 @@ async function requireAuth(req, res, next) {
       req.auth = decoded;
       req.user = {
         id: String(decoded.id),
-        role: decoded.role || "user",
+        role: resolveUserRole(decoded),
         email: decoded.email || "",
       };
       return next();
@@ -45,7 +46,7 @@ async function requireAuth(req, res, next) {
     req.auth = decoded;
     req.user = {
       id: user._id.toString(),
-      role: user.role,
+      role: resolveUserRole(user),
       email: user.email,
     };
 
